@@ -2,10 +2,32 @@ const pool = require("../config/db");
 const jwt = require("jsonwebtoken");
 const Router = require("express").Router;
 const router = new Router();
-router.post("/login", async (req, res) => {
+router.post("/instructors/login", async (req, res) => {
   console.log("entered the login post");
-  let { id, name, password } = req.body;
-  if (!name && !id && !password) {
+  let { name, password } = req.body;
+  if (!name || !password) {
+    return res.send("you must enter a complete data");
+  }
+  const getInstructorQuery = await pool.query(
+    `SELECT * FROM instructors where name =$1 `,
+    [name]
+  );
+  if (getInstructorQuery.rowCount === 0) {
+    return res.send("User Doesn't exist");
+  }
+  if (password === getInstructorQuery.rows[0].password) {
+    const token = jwt.sign(
+      { sub: getInstructorQuery.rows[0].id },
+      "our secret"
+    );
+    res.send({ token });
+  }
+});
+router.post("/students/login", async (req, res) => {
+  console.log("entered the login post");
+  let { code, name, password } = req.body;
+  const id = code;
+  if (!name || !id || !password) {
     return res.send("you must enter a complete data");
   }
   const getUserQuery = await pool.query(
@@ -13,11 +35,12 @@ router.post("/login", async (req, res) => {
     [id]
   );
   if (getUserQuery.rowCount === 0) {
-    return res.send("wrong password");
+    return res.send("User Doesn't exist");
   }
-
-  const token = jwt.sign({ sub: getUserQuery.rows[0].id }, "our secret");
-  res.send(token);
+  if (password === getUserQuery.rows[0].password) {
+    const token = jwt.sign({ sub: getUserQuery.rows[0].id }, "our secret");
+    res.send({ token });
+  }
 });
 
 module.exports = router;
