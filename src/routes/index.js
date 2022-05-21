@@ -10,8 +10,5 @@ router.use(protectedRoute);
 router.use(signUpRoute);
 router.use(loginRoute);
 router.use("/image", fileUploadRouter);
-router.use("/", (req, res, next) => {
-  res.send("this route isn't handled yet");
-});
 
 module.exports = router;

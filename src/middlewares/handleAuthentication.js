@@ -8,7 +8,6 @@ const handleAuthentication = async (req, res, next) => {
 
   // we will assume that authorize header is in that shape "authorization:Bearer AToken"
   const token = authorizeHeader && authorizeHeader.split(" ")[1];
-  console.log(token, "from token", "\n ", authorizeHeader);
   // now check if there is a token or not
   if (!token) return res.sendStatus(401);
 
@@ -35,7 +34,9 @@ const handleAuthentication = async (req, res, next) => {
     if (getInstructorQuery.rowCount === 0)
       return res.status(404).send({ message: "User Not Authorized" });
     user = getInstructorQuery.rows[0];
+    req.user = user;
     req.user.isInstructor = true;
+    return next();
   }
   req.user = getUserQuery.rows[0];
 
