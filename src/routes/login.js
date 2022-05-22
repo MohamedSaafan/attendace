@@ -25,9 +25,9 @@ router.post("/instructors/login", async (req, res) => {
 });
 router.post("/students/login", async (req, res) => {
   console.log("entered the login post");
-  let { code, name, password } = req.body;
+  let { code, password } = req.body;
   const id = code;
-  if (!name || !id || !password) {
+  if (!id || !password) {
     return res.send("you must enter a complete data");
   }
   const getUserQuery = await pool.query(
