@@ -72,6 +72,6 @@ router.post(
     res.status(201).send({ message: "Student Enrolled Successfully" });
   }
 );
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY1MzE1NTg4OX0._rC6N-6i1rjVDqyVpqu0Yi1-eJAfmUdX3e3PwcYdc6c
+// an instructor token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY1MzE1NTg4OX0._rC6N-6i1rjVDqyVpqu0Yi1-eJAfmUdX3e3PwcYdc6c
 
 module.exports = router;

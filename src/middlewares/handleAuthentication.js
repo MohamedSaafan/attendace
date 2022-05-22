@@ -39,7 +39,7 @@ const handleAuthentication = async (req, res, next) => {
     return next();
   }
   req.user = getUserQuery.rows[0];
-
+  req.user.isStudent = true;
   next();
 };
 
