@@ -20,7 +20,7 @@ router.post("/instructors/login", async (req, res) => {
       { sub: getInstructorQuery.rows[0].id },
       "our secret"
     );
-    res.send({ token });
+    res.send({ token, id: getInstructorQuery.rows[0].id });
   }
 });
 router.post("/students/login", async (req, res) => {
