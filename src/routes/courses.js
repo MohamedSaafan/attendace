@@ -146,8 +146,8 @@ router.get("/courses/:courseID/attendance-report", async (req, res, next) => {
   const { courseID } = req.params;
   const reportQuery = await pool.query(
     `
-  select students.name,count(attendance.student_id) as "num_of_attendance" from students join attendance on attendance.student_id = students.id
-  group by students.name,attendance.course_id
+  select students.name,students.id as "student_code",count(attendance.student_id) as "num_of_attendance" from students join attendance on attendance.student_id = students.id
+  group by students.name, attendance.course_id
   having attendance.course_id = $1
   `,
     [courseID]
