@@ -38,6 +38,33 @@ router.post("/courses", handleAuthentication, async (req, res, next) => {
   return res.status(201).send({ message: "Course Created Successfully" });
 });
 
+router.get("/courses/:instructorID", async (req, res, next) => {
+  const { instructorID } = req.params;
+  // COURSE NAME
+  // COURSE CODE
+  // NUMBER OF STUDENTS
+  // LINKED AT
+  // DATE CREATED
+  const getCoursesQuery = await pool.query(
+    `
+  SELECT courses.course_id, courses.name,courses.start_date
+  FROM courses  where course_id = $1
+  `,
+    [instructorID]
+  );
+  const courses = getCoursesQuery.rows;
+  for (let i = 0; i < courses.length; i++) {
+    const courseID = courses[i].course_id;
+    const countStudentsQuery = await pool.query(
+      `SELECT count(*) as "number_of_students" FROM enrollements WHERE course_id = $1`,
+      [courseID]
+    );
+    courses[i].number_of_students =
+      countStudentsQuery.rows[0].number_of_students;
+  }
+  res.status(200).send(courses);
+});
+
 router.post(
   "/students/courses/enroll",
   handleAuthentication,
