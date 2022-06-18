@@ -40,10 +40,9 @@ router.post("/instructor/signup", async (req, res, next) => {
 
 router.post("/students/signup", async (req, res, next) => {
   console.log("from first post");
-  let { password } = req.body;
-  let { name } = req.body;
-  let { code } = req.body;
-  if (!name && !code && !password) {
+  let { name, imageURL, code, password } = req.body;
+
+  if (!name || !code || !password || !imageURL) {
     console.log(name, code, password);
     return res.send("you must provide a complete data");
   }

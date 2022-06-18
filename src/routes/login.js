@@ -13,7 +13,7 @@ router.post("/instructors/login", async (req, res) => {
     [name]
   );
   if (getInstructorQuery.rowCount === 0) {
-    return res.send("User Doesn't exist");
+    return res.status(403).send("User Doesn't exist");
   }
   if (password === getInstructorQuery.rows[0].password) {
     const token = jwt.sign(

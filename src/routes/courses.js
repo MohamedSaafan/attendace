@@ -72,6 +72,53 @@ router.post(
     res.status(201).send({ message: "Student Enrolled Successfully" });
   }
 );
+
+const getStudentsImages = async (courseID) => {
+  const getFacesQuery = await pool.query(
+    `
+      SELECT students.id as "student_id" , students.image_url 
+      FROM students JOIN enrollements ON enrollements.student_id = students.id
+      WHERE enrollements.course_id = $1
+    `,
+    [courseID]
+  );
+  const faces = {};
+  getFacesQuery.rows.forEach((student) => {
+    faces["1-" + student.student_id] = student.image_url;
+  });
+
+  return faces;
+};
+const takeAttendance = async (faces, lectureImageURL) => {};
+router.post("/:courseID/take-attendance", async (req, res, next) => {
+  // get the lecture image
+  // get students array of images
+  // call the function to take the attendance
+  // mark attendees as attended the lecture
+  const { courseID } = req.params;
+  const { lectureImageURL } = req.body;
+  const studentsFaces = await getStudentsImages(courseID);
+  const attendedStudentsCodes = await takeAttendance();
+  const studentsCodesArray = attendedStudentsCodes.resFaces;
+  for (let i = 0; i < studentsCodesArray.length; i++) {
+    // mark each student as attended in the course
+    await pool.query(
+      `
+      INSERT INTO attendance (student_id,date,course_id) VALUES ($1,now(),$2)
+    `,
+      [studentsCodesArray[i], courseID]
+    );
+  }
+
+  // {
+  //   "resFaces":["fac1Name","face2Name"]
+  // }
+});
+
+router.post("/:courseID/attendance-report", async (req, res, next) => {
+  const reportQuery = await pool.query(``);
+});
+
 // an instructor token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY1MzE1NTg4OX0._rC6N-6i1rjVDqyVpqu0Yi1-eJAfmUdX3e3PwcYdc6c
 
 module.exports = router;
