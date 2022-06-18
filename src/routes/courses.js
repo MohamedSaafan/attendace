@@ -142,8 +142,17 @@ router.post("/:courseID/take-attendance", async (req, res, next) => {
   // }
 });
 
-router.post("/:courseID/attendance-report", async (req, res, next) => {
-  const reportQuery = await pool.query(``);
+router.get("/courses/:courseID/attendance-report", async (req, res, next) => {
+  const { courseID } = req.params;
+  const reportQuery = await pool.query(
+    `
+  select students.name,count(attendance.student_id) as "num_of_attendance" from students join attendance on attendance.student_id = students.id
+  group by students.name,attendance.course_id
+  having attendance.course_id = $1
+  `,
+    [courseID]
+  );
+  res.status(200).send(reportQuery.rows);
 });
 
 // an instructor token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY1MzE1NTg4OX0._rC6N-6i1rjVDqyVpqu0Yi1-eJAfmUdX3e3PwcYdc6c
