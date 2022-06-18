@@ -48,7 +48,7 @@ router.get("/courses/:instructorID", async (req, res, next) => {
   const getCoursesQuery = await pool.query(
     `
   SELECT courses.course_id, courses.name,courses.start_date
-  FROM courses  where course_id = $1
+  FROM courses  where  instructor_id = $1
   `,
     [instructorID]
   );
