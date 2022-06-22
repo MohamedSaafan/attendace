@@ -116,7 +116,9 @@ const getStudentsImages = async (courseID) => {
 
   return faces;
 };
+
 const takeAttendance = async (faces, lectureImageURL) => {};
+
 router.post("/:courseID/take-attendance", async (req, res, next) => {
   // get the lecture image
   // get students array of images
@@ -124,8 +126,12 @@ router.post("/:courseID/take-attendance", async (req, res, next) => {
   // mark attendees as attended the lecture
   const { courseID } = req.params;
   const { lectureImageURL } = req.body;
+  console.log(courseID, lectureImageURL, "from courseID and lectureImage url");
   const studentsFaces = await getStudentsImages(courseID);
-  const attendedStudentsCodes = await takeAttendance();
+  const attendedStudentsCodes = await takeAttendance(
+    studentsFaces,
+    lectureImageURL
+  );
   const studentsCodesArray = attendedStudentsCodes.resFaces;
   for (let i = 0; i < studentsCodesArray.length; i++) {
     // mark each student as attended in the course
@@ -136,6 +142,7 @@ router.post("/:courseID/take-attendance", async (req, res, next) => {
       [studentsCodesArray[i], courseID]
     );
   }
+  res.status(200).send({ message: "Attendance Taken Successfully" });
 
   // {
   //   "resFaces":["fac1Name","face2Name"]
