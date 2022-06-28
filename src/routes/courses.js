@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const pool = require("../config/db");
 
 const router = new require("express").Router();
@@ -117,7 +118,9 @@ const getStudentsImages = async (courseID) => {
   return faces;
 };
 
-const takeAttendance = async (faces, lectureImageURL) => {};
+const takeAttendance = async (faces, lectureImageURL) => {
+  const { data } = await axios.post();
+};
 
 router.post("/:courseID/take-attendance", async (req, res, next) => {
   // get the lecture image
@@ -128,22 +131,25 @@ router.post("/:courseID/take-attendance", async (req, res, next) => {
   const { lectureImageURL } = req.body;
   console.log(courseID, lectureImageURL, "from courseID and lectureImage url");
   const studentsFaces = await getStudentsImages(courseID);
-  const attendedStudentsCodes = await takeAttendance(
-    studentsFaces,
-    lectureImageURL
-  );
-  const studentsCodesArray = attendedStudentsCodes.resFaces;
-  for (let i = 0; i < studentsCodesArray.length; i++) {
-    // mark each student as attended in the course
-    await pool.query(
-      `
-      INSERT INTO attendance (student_id,date,course_id) VALUES ($1,now(),$2)
-    `,
-      [studentsCodesArray[i], courseID]
-    );
-  }
-  res.status(200).send({ message: "Attendance Taken Successfully" });
+  console.log(studentsFaces, "from students faces");
+  const response = await axios.post("http://zalapya.ddns.net/addimg", {
+    imgs: [lectureImageURL],
+    faces: studentsFaces,
+  });
 
+  console.log(response.data, "from response of the attendance");
+
+  // const studentsCodesArray = attendedStudentsCodes.resFaces;
+  // for (let i = 0; i < studentsCodesArray.length; i++) {
+  //   // mark each student as attended in the course
+  //   await pool.query(
+  //     `
+  //     INSERT INTO attendance (student_id,date,course_id) VALUES ($1,now(),$2)
+  //   `,
+  //     [studentsCodesArray[i], courseID]
+  //   );
+  // }
+  res.status(200).send({ message: "Attendance Taken Successfully" });
   // {
   //   "resFaces":["fac1Name","face2Name"]
   // }
