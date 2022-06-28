@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = (pgm) => {
   pgm.query(`CREATE TABLE courses (
-        s
+        
         course_id VARCHAR PRIMARY KEY,
         name VARCHAR,
         instructor_id VARCHAR,

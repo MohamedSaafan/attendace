@@ -7,7 +7,7 @@ exports.up = (pgm) => {
     id SERIAL PRIMARY KEY,
     student_id INTEGER,
     date TIMESTAMP DEFAULT now(),
-    couse_id INTEGER
+    course_id INTEGER
 )`);
 };
 
