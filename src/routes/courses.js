@@ -1,6 +1,5 @@
 const { default: axios } = require("axios");
 const pool = require("../config/db");
-
 const router = new require("express").Router();
 const handleAuthentication = require("../middlewares/handleAuthentication");
 
@@ -132,12 +131,31 @@ router.post("/:courseID/take-attendance", async (req, res, next) => {
   console.log(courseID, lectureImageURL, "from courseID and lectureImage url");
   const studentsFaces = await getStudentsImages(courseID);
   console.log(studentsFaces, "from students faces");
-  const response = await axios.post("http://zalapya.ddns.net/addimg", {
-    imgs: [lectureImageURL],
-    faces: studentsFaces,
-  });
-
-  console.log(response.data, "from response of the attendance");
+  console.log("before sending request to emad");
+  try {
+    console.log(
+      {
+        imgs: [lectureImageURL],
+        faces: studentsFaces,
+      },
+      "from the body of the request"
+    );
+    const response = await axios.post("http://127.0.0.1:5000/addimg", {
+      imgs: [lectureImageURL],
+      faces: studentsFaces,
+    });
+    console.log(
+      {
+        imgs: [lectureImageURL],
+        faces: studentsFaces,
+      },
+      "from the body of the request"
+    );
+    console.log(response.data, "from response of the attendance");
+    console.log("after emad requyest");
+  } catch (err) {
+    console.log(err.message, "from error message");
+  }
 
   // const studentsCodesArray = attendedStudentsCodes.resFaces;
   // for (let i = 0; i < studentsCodesArray.length; i++) {
