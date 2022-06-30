@@ -44,7 +44,7 @@ router.post("/students/signup", async (req, res, next) => {
 
   if (!name || !code || !password || !imageURL) {
     console.log(name, code, password);
-    return res.status(400).send(new Error("You must Provide complete data"));
+    return res.status(400).send({ message: "You Must provide complete data" });
   }
   // check if there exist a user with these credential
   const findStudentQuery = await pool.query(
